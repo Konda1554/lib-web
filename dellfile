@@ -1,0 +1,48 @@
+node{
+
+
+
+
+//echo "GitHub BranhName ${env.BRANCH_NAME}"
+  //echo "Jenkins Job Number ${env.BUILD_NUMBER}"
+  echo "Jenkins Node Name ${env.NODE_NAME}"
+  
+  echo "Jenkins Home ${env.JENKINS_HOME}"
+  echo "Jenkins URL ${env.JENKINS_URL}"
+  echo "JOB Name ${env.JOB_NAME}"
+
+
+
+
+
+
+    properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '3', daysToKeepStr: '', numToKeepStr: '3')), pipelineTriggers([pollSCM('* * * * *')])])
+    def mavenHome = tool name: "maven"
+    stage ('CheckOutCode'){
+        git credentialsId: '80ad5e1e-68ed-4fb2-8425-a5fb2ab845e2', url: 'https://github.com/Konda1554/web-app.git'
+    }
+    stage ('Build'){
+        sh "${mavenHome}/bin/mvn clean package"
+    }
+    /*
+    stage ('ExecuteSonarQubeReport'){
+         sh "${mavenHome}/bin/mvn package sonar:sonar"
+   }
+    stage ('UploadArtifactsIntoNewRepo'){
+         sh "${mavenHome}/bin/mvn package deploy"
+         }
+         stage ('DeployAppIntoTomcatServer'){
+             sshagent(['d7facc3e-254c-4bc2-8b1a-d957151a5ea3']) {
+ sh "scp -o StrictHostkeyChecking=no target/maven-web-application.war ec2-user@54.234.179.161:/opt/tomcat/webapps"
+ 
+}
+         }
+         stage ('SendEmailNotification'){
+             mail bcc: '', body: '''Buildover..
+
+
+regards
+venkat''', cc: 'kondavenkatreddy3@gmail.com', from: '', replyTo: '', subject: 'buildover!..', to: 'kondavenkatreddy3@gmail.com'
+         }
+         */
+}
